@@ -1,16 +1,21 @@
 import controlP5.*; // include the controlP5 library
 
 ControlP5 cp5;
+controlP5.Button D;
+controlP5.Button D2;
 
 int myGraph1 = 1; //used for switching between graphs 
 int myGraph2 = 2;
 int myGraph3 = 3;
 int toggle = 0;
+int data = 0;
 float radius; //for pie chart 
 float min2;
 float max2;
 float temp;
 float scale;
+boolean display = false;
+
 
 void setup()
 {
@@ -42,6 +47,18 @@ void setup()
      .setSize(110,50)
      ;
      
+    D = cp5.addButton("Data1")
+     .setValue(0)
+     .setPosition(width - (border*2), 100)
+     .setSize(70,50)
+     ;
+
+     D2 = cp5.addButton("Data2")
+     .setValue(0)
+     .setPosition(width - (border*2), 150)
+     .setSize(70,70)
+     ;
+     
   PFont pfont = createFont("Arial",20,true); // use true/false for smooth/no-smooth
   ControlFont font = new ControlFont(pfont,241); // nicer font
   
@@ -60,6 +77,20 @@ void setup()
      ;
      
      cp5.getController("Rebounds")
+     .getCaptionLabel()
+     .setFont(font)
+     .toUpperCase(false)
+     .setSize(20)
+     ;
+     
+     cp5.getController("Data1") //sets the parameters for the buttons 
+     .getCaptionLabel()
+     .setFont(font)
+     .toUpperCase(false)
+     .setSize(20)
+     ;
+     
+     cp5.getController("Data2") //sets the parameters for the buttons 
      .getCaptionLabel()
      .setFont(font)
      .toUpperCase(false)
@@ -104,6 +135,7 @@ void calcMinMax()
 
 void drawLineGraph()
 {
+  display = false;
   stroke(255); //heading centered
    textAlign(CENTER, CENTER);   
    float textY = (border * 0.5f); 
@@ -178,6 +210,7 @@ void assignColors() // random colour selection
 
 void drawOtherGraph() //piechart
 {
+   display = true;
    stroke(255); //heading
    fill(255);
    textAlign(CENTER, CENTER);   
@@ -221,9 +254,25 @@ void drawOtherGraph() //piechart
     if (angle > last && angle < current) // mouse on certain segment
     {
       r = radius * 1.5f; //increase the size of the segment
+     if( data == 1)
+     {
       fill(255);
-      text("Game: " + wnbas.get(i ).opponent, width - 100, 30);
+      text("Game Opponent: " + wnbas.get(i ).opponent, width - 100, 30);
       text("Fouls: " + wnbas.get(i).fouls, width - 100, 50);
+     }
+   else
+     {
+       fill(255);
+      text("Fouls: " + wnbas.get(i).fouls, width - 100, 50);
+        if ( wnbas.get(i).win == 1)
+        {
+          text("Win ", width - 100, 30);
+        }
+        else
+        {
+          text("Lose ", width - 100, 30);
+        }
+     }
     }
     stroke(colors[i]);
     fill(colors[i]);
@@ -236,15 +285,16 @@ void drawOtherGraph() //piechart
        , last
        , current
        );
-    last = current;       
+    last = current; 
+      
   }
   fill(255);
       textSize(15);
-
 }
 
 void drawBarChart()
 {
+  display = false;
   textAlign(CENTER, CENTER);   
   float textY = (border * 0.5f); 
   stroke(255);
@@ -262,11 +312,6 @@ void drawBarChart()
     {
       max2 = wnba.totrb;
     }  
-    
-    if(wnba.totrb < min2)
-    {
-      min2 = wnba.totrb;
-    }
     
   float barWidth = (width -(border * 2))/wnbas.size(); // how thick the bars are 
   for (int i = 0; i < wnbas.size(); i ++)
@@ -308,6 +353,7 @@ void drawBarChart()
 void draw()
 {
   background(0);
+  hideButton();
   
   if ( toggle == 1) // toggle between the menu settings 
   {
@@ -323,7 +369,6 @@ void draw()
   }
   
 }
-
 public void Points(int theValue) 
 {
  toggle = 1; // sets toggle value 
@@ -336,4 +381,30 @@ public void Fouls(int theValue)
 public void Rebounds(int theValue) 
 {
  toggle = 3; 
+}
+
+public void Data1(int theValue) 
+{
+ data = 1; 
+}
+
+public void Data2(int theValue) 
+{
+ data = 2; 
+}
+
+void hideButton()
+{
+  if (display == false) {
+    D.hide();
+  }
+  else {
+    D.show();
+  }
+  if (display == false) {
+    D2.hide();
+  }
+  else {
+    D2.show();
+  }
 }
