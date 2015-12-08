@@ -271,7 +271,7 @@ void drawOtherGraph() //piechart
         }
         else
         {
-          text("Lose ", width - 100, 30);
+          text("Loss ", width - 100, 30);
         }
      }
     }
