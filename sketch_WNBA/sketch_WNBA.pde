@@ -248,6 +248,7 @@ void drawBarChart()
   textAlign(CENTER, CENTER);   
   float textY = (border * 0.5f); 
   stroke(255);
+  fill(255);
   text("Skylar Diggins Rebounds for the Season", width * 0.5f, textY);
   
   stroke(255); 
@@ -285,6 +286,7 @@ void drawBarChart()
   for(int i=0; i<5; i++)
   {
     stroke(255);
+  fill(255);
     temp = map(i, 0, 4, height-border, border);
     line(border, temp, border-5, temp);
     text(floor(scale*i), border-3, temp-3);
@@ -296,6 +298,7 @@ void drawBarChart()
   for(int i=0; i<5; i++)
   {
     stroke(255);
+  fill(255);
     temp = map(i, 0, 4, border, width-border);
     line(temp, height-border+5, temp, height-border);
     text(floor(scale*i), temp, (height+13) - border);
