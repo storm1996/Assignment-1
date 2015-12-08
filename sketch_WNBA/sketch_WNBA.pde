@@ -47,6 +47,7 @@ void setup()
      .setSize(110,50)
      ;
      
+     // these buttons only appear when the fouls graph is called 
     D = cp5.addButton("Data1")
      .setValue(0)
      .setPosition(width - (border*2), 100)
@@ -135,7 +136,7 @@ void calcMinMax()
 
 void drawLineGraph()
 {
-  display = false;
+  display = false; // will stop data1 and data2 buttons from appearing
   stroke(255); //heading centered
    textAlign(CENTER, CENTER);   
    float textY = (border * 0.5f); 
@@ -210,7 +211,7 @@ void assignColors() // random colour selection
 
 void drawOtherGraph() //piechart
 {
-   display = true;
+   display = true; // buttons appear 
    stroke(255); //heading
    fill(255);
    textAlign(CENTER, CENTER);   
@@ -254,7 +255,7 @@ void drawOtherGraph() //piechart
     if (angle > last && angle < current) // mouse on certain segment
     {
       r = radius * 1.5f; //increase the size of the segment
-     if( data == 1)
+     if( data == 1) // switches between different outputs for piechart
      {
       fill(255);
       text("Game Opponent: " + wnbas.get(i ).opponent, width - 100, 30);
@@ -353,7 +354,7 @@ void drawBarChart()
 void draw()
 {
   background(0);
-  hideButton();
+  hideButton(); // function for displaying buttons 
   
   if ( toggle == 1) // toggle between the menu settings 
   {
