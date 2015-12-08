@@ -1,12 +1,12 @@
-import controlP5.*;
+import controlP5.*; // include the controlP5 library
 
 ControlP5 cp5;
 
-int myGraph1 = 1;
+int myGraph1 = 1; //used for switching between graphs 
 int myGraph2 = 2;
 int myGraph3 = 3;
 int toggle = 0;
-float radius;
+float radius; //for pie chart 
 float min2;
 float max2;
 float temp;
@@ -15,21 +15,21 @@ float scale;
 void setup()
 {
  size(700, 700);
- loadData();
+ loadData(); //load stat sheet into processing 
  calcMinMax();
  border = width * 0.1f;
  radius = width / 2; 
  assignColors();
  cp5 = new ControlP5(this);
  
-   // create a new button with name 'buttonA'
+   // create a new button with name Points for the menu
   cp5.addButton("Points")
      .setValue(0)
      .setPosition(210, height -51)
      .setSize(70,50)
      ;
   
-  // and add another 2 buttons
+  // and add another Fouls button and Rebound button
   cp5.addButton("Fouls")
      .setValue(100)
      .setPosition(300, height -51)
@@ -43,9 +43,9 @@ void setup()
      ;
      
   PFont pfont = createFont("Arial",20,true); // use true/false for smooth/no-smooth
-  ControlFont font = new ControlFont(pfont,241);
+  ControlFont font = new ControlFont(pfont,241); // nicer font
   
-    cp5.getController("Points")
+    cp5.getController("Points") //sets the parameters for the buttons 
      .getCaptionLabel()
      .setFont(font)
      .toUpperCase(false)
@@ -68,7 +68,7 @@ void setup()
 }
 
 
-ArrayList<Roster> wnbas = new ArrayList<Roster>();
+ArrayList<Roster> wnbas = new ArrayList<Roster>(); //array list for reading in the data
 color[] colors = new color[34];
 float border;
 float min, max;
@@ -77,9 +77,9 @@ float min, max;
 void loadData()
 {
   String[] lines = loadStrings("wnba2014a.csv");
-  for(String line: lines)
+  for(String line: lines) //convert .csv file to string 
   {
-    Roster wnba = new Roster(line);
+    Roster wnba = new Roster(line); //put into the class
     wnbas.add(wnba);
   }
 }
@@ -90,7 +90,7 @@ void calcMinMax()
   min = max = wnbas.get(0).points; 
   for (Roster wnba:wnbas)
   {
-    if (wnba.points < min)
+    if (wnba.points < min) // min and max for line graph 
     {
       min = wnba.points;
     }
@@ -104,17 +104,17 @@ void calcMinMax()
 
 void drawLineGraph()
 {
-  stroke(255);
+  stroke(255); //heading centered
    textAlign(CENTER, CENTER);   
    float textY = (border * 0.5f); 
    text("Skylar Diggins Points Per Game", width * 0.5f, textY);
   
-  stroke(255);  
+  stroke(255);  // draw basic border no ticks on the side needed 
  line(border, height - border, width - border, height - border);
  line(border, border , border, height - border);
   
   
-  for (int i = 1 ; i < wnbas.size(); i ++)
+  for (int i = 1 ; i < wnbas.size(); i ++) // map the line grpah into the border space drawn 
   {
     stroke(255, 20, 147);
     float x1 = map(i - 1, 0, wnbas.size() - 1, border, width - border);
@@ -123,9 +123,9 @@ void drawLineGraph()
     float y2 = map(wnbas.get(i).points, min, max, height - border, border);
     line(x1, y1, x2, y2);
     
-    if (mouseX >= x1 && (mouseX <= x2 && mouseX <= width-(border+5)))
+    if (mouseX >= x1 && (mouseX <= x2 && mouseX <= width-(border+5))) //if mouse is on a certain point that'snot the last point 
     {
-     
+     // draw circle for basketball
       fill(255,69,0);
       stroke(0);
       ellipseMode(CENTER);
@@ -137,13 +137,13 @@ void drawLineGraph()
       arc(x1+20, y1, 30, 42, 1.785, 4.632);
       line(x1-25, y1, x1+25, y1);
       
-      //ellipse(x1, y1, 25, 25);
+      //display the game info too 
       fill(255);
       textSize(15);
       text("Game: " + wnbas.get(i - 1).opponent, x1 + 10, y1 + 30);
       text("Points Scored: " + wnbas.get(i - 1).points, x1 + 10, y1 + 50);
     } 
-        if (mouseX >= width-(border+5) && mouseX <= width)
+        if (mouseX >= width-(border+5) && mouseX <= width) // if mouse at last position 
     {
        x1 = map(33, 0, wnbas.size()-1 , border, width - border);
      y1 = map(wnbas.get(33).points, min, max, height - border, border);
@@ -159,7 +159,6 @@ void drawLineGraph()
       arc(x1+20, y1, 30, 42, 1.785, 4.632);
       line(x1-25, y1, x1+25, y1);
       
-      //ellipse(x1, y1, 25, 25);
       fill(255);
       textSize(15);
       text("Game: " + wnbas.get(33).opponent, x1 + 10, y1 + 30);
@@ -169,7 +168,7 @@ void drawLineGraph()
   }  
 }
 
-void assignColors()
+void assignColors() // random colour selection
 {
   for(int i = 0 ; i < wnbas.size(); i++)
   {
@@ -177,15 +176,15 @@ void assignColors()
   }
 }
 
-void drawOtherGraph()
+void drawOtherGraph() //piechart
 {
-   stroke(255);
+   stroke(255); //heading
    fill(255);
    textAlign(CENTER, CENTER);   
    float textY = (border * 0.5f); 
    text("Skylar Diggins Fouls Per Game", width * 0.5f, textY);
 
-  float sum = 0.0f;
+  float sum = 0.0f; // find total value of fouls 
   for (int i = 0 ; i < wnbas.size() ; i ++)
   {
     sum += wnbas.get(i).fouls;
@@ -194,10 +193,11 @@ void drawOtherGraph()
  // Calculate the angle to the mouse
   float toMouseX = mouseX - radius;
   float toMouseY = mouseY - radius;  
-  float angle = atan2(toMouseY, toMouseX);  
+  float angle = atan2(toMouseY, toMouseX);  // atan2 is handy for finding angle from mouse
+  
+  
   // We have to do this because 
   // atan2 returns negative angles if y > 0 
-  // See https://processing.org/reference/atan2_.html
   if (angle < 0)
   {
     angle = map(angle, -PI, 0, PI, TWO_PI);
@@ -212,17 +212,15 @@ void drawOtherGraph()
   {
     stroke(0);
     cumulative += wnbas.get(i).fouls;
-    // Calculate the surrent angle
+    // Calculate the current angle
     float current = map(cumulative, 0, sum, 0, TWO_PI);
+    
+    
     // Draw the pie segment
-    
-    
     float r = radius;
-    // If the mouse angle is inside the pie segment
-    // Mmmm pie. Im hungry
-    if (angle > last && angle < current)
+    if (angle > last && angle < current) // mouse on certain segment
     {
-      r = radius * 1.5f;
+      r = radius * 1.5f; //increase the size of the segment
       fill(255);
       text("Game: " + wnbas.get(i ).opponent, width - 100, 30);
       text("Fouls: " + wnbas.get(i).fouls, width - 100, 50);
@@ -247,37 +245,41 @@ void drawOtherGraph()
 
 void drawBarChart()
 {
-  
-     textAlign(CENTER, CENTER);   
-   float textY = (border * 0.5f); 
-   stroke(255);
-   text("Skylar Diggins Rebounds for the Season", width * 0.5f, textY);
+  textAlign(CENTER, CENTER);   
+  float textY = (border * 0.5f); 
+  stroke(255);
+  text("Skylar Diggins Rebounds for the Season", width * 0.5f, textY);
   
   stroke(255); 
   line(border, height - border, width - border, height - border);
   line(border, border , border, height - border);
   
-  min2 = max2 = wnbas.get(0).totrb; 
+  max2 = wnbas.get(0).totrb; 
   for (Roster wnba:wnbas)
   {
     if (wnba.totrb > max2)
     {
       max2 = wnba.totrb;
-    }    
-  float barWidth = (width -(border * 2))/wnbas.size();
+    }  
+    
+    if(wnba.totrb < min2)
+    {
+      min2 = wnba.totrb;
+    }
+    
+  float barWidth = (width -(border * 2))/wnbas.size(); // how thick the bars are 
   for (int i = 0; i < wnbas.size(); i ++)
   {
       
-      float x = i * barWidth;
-      float y = map(wnbas.get(i).totrb, 0, max2, border, height - (border* 2));
+      float x = i * barWidth; // mapping bars 
+      float y = map(wnbas.get(i).totrb, 0, max2, 0, height-(border*2));
       stroke(colors[i]);
       fill(colors[i]);
-      rect((float)x + border + 1, height - border - 1, (float)barWidth, -y);
-
+      rect((float)x + border+1, height - border -1, (float)barWidth, -y);
     }
   }
 
-   scale = max2/4;
+  scale = max2/4; // drawing ticks on side 
   textAlign(RIGHT);
   
   for(int i=0; i<5; i++)
@@ -304,7 +306,7 @@ void draw()
 {
   background(0);
   
-  if ( toggle == 1)
+  if ( toggle == 1) // toggle between the menu settings 
   {
     drawLineGraph();
   }
@@ -321,7 +323,7 @@ void draw()
 
 public void Points(int theValue) 
 {
- toggle = 1; 
+ toggle = 1; // sets toggle value 
 }
 
 public void Fouls(int theValue) 
